@@ -9,23 +9,28 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
+            string newName = Guid.NewGuid().ToString();
+
             using (var db = new BloggingContext())
             {
-                if (!db.Roots.Any())
-                {
-                    var anchor = new Anchor { Name = "Screen1" };
-                    var rootNode = new RootNode { Name = "Root" };
-                    rootNode.Children.Add(new Node { Name = "Leaf" });
-                    anchor.Properties.Add(rootNode);
-                }
+                var anchor = new Anchor { Name =newName };
+                var rootNode = new RootNode { Name = "Root" };
+                var middle = new Node {Name = "middle"};
+                middle.Children.Add(new Node{Name="DeepestLeaf"});
+                rootNode.Children.Add(middle);
+                rootNode.Children.Add(new Node { Name = "Leaf1" });
+                rootNode.Children.Add(new Node { Name = "Leaf2" });
 
+                
+                anchor.Properties.Add(rootNode);
+                db.Anchors.Add(anchor);
                 db.SaveChanges();
             }
             using (var db = new BloggingContext())
             {
-                var anchor = db.Roots.First();
-                anchor.Properties.ToList();
-                anchor.Properties.
+                var anchor = db.Anchors.First(a => a.Name==newName);
+                anchor.Include(a =>anchor.Properties);
+                
             }
 
             Console.ReadLine();
