@@ -29,8 +29,7 @@ namespace ConsoleApp1
             using (var db = new BloggingContext())
             {
                 var anchor = db.Anchors.First(a => a.Name==newName);
-                anchor.Include(a =>anchor.Properties);
-                
+                db.Entry(anchor).Collection(a=>a.Properties).Load();
             }
 
             Console.ReadLine();
